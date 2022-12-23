@@ -102,21 +102,12 @@ FROM information_schema.columns
 WHERE table_schema = 'PUBLIC' AND TABLE_NAME = 'VJ_SALES_COPY' AND (COLUMN_NAME = 'ORDER_DATE_NEW' OR COLUMN_NAME = 'SHIP_DATE_NEW');
 
 ALTER TABLE VJ_SALES_COPY
-DROP COLUMN ORDER_DATE, SHIP_DATE; -- We can drop irrelevant column from the table.
+DROP COLUMN ORDER_DATE, SHIP_DATE; -- We can drop both of these table beacuse we have replica of these two columns.
 
 DESCRIBE TABLE VJ_SALES_COPY;
 
 
 -- Now, ORDER_DATE and SHIP_DATE is in "DATE" FORMAT.
-
-/* ROUGH (IGNORE)
-CREATE OR REPLACE TABLE VJ_SALES_ROUGH_COPY AS
-SELECT *, TO_CHAR(TO_DATE(ORDER_DATE, 'YYYY-MM-DD'), 'DD-MM-YYYY') AS ORDER_DATE_NEW,
-          TO_CHAR(TO_DATE(SHIP_DATE, 'YYYY-MM-DD'), 'DD-MM-YYYY') AS SHIP_DATE_NEW 
-FROM VJ_SALES_DATA;
-DROP TABLE VJ_SALES_ROUGH_COPY;
-*/
-
 
 /* __________________________________ ANSWER 4__________________________________ */
 
@@ -174,7 +165,6 @@ SET PROCESS_DAY = (DATEDIFF(DAYS, ORDER_DATE_NEW, SHIP_DATE_NEW)); -- FROM Order
 SELECT ORDER_DATE_NEW, SHIP_DATE_NEW, PROCESS_DAY
 FROM VJ_SALES_COPY;
 
-
 /* __________________________________ ANSWER 7 __________________________________ */;
 
 /* 7. Create a new column called Rating and then based on the Process dates give rating like given below.
@@ -216,12 +206,6 @@ DESCRIBE VIEW ALL_IN_ONE_FINAL_ANSWER;
 
 SELECT GET_DDL('VIEW', 'ALL_IN_ONE_FINAL_ANSWER');
 
-/*************************************** THANK YOU! ***************************************/ 
-
-
-
-
-
-
+/*************************************** THANK YOU! ***************************************/;
 
 

@@ -1,6 +1,3 @@
-
--- ASSIGNMENT_ANSWERS;
-
 USE WAREHOUSE INEURON_ASSIGNMENTS;
 USE DATABASE ASSIGNMENT_DB;
 
@@ -105,21 +102,12 @@ FROM information_schema.columns
 WHERE table_schema = 'PUBLIC' AND TABLE_NAME = 'VJ_SALES_COPY' AND (COLUMN_NAME = 'ORDER_DATE_NEW' OR COLUMN_NAME = 'SHIP_DATE_NEW');
 
 ALTER TABLE VJ_SALES_COPY
-DROP COLUMN ORDER_DATE, SHIP_DATE; -- We can drop irrelevant column from the table.
+DROP COLUMN ORDER_DATE, SHIP_DATE; -- We can drop both of these table beacuse we have replica of these two columns.
 
 DESCRIBE TABLE VJ_SALES_COPY;
 
 
 -- Now, ORDER_DATE and SHIP_DATE is in "DATE" FORMAT.
-
-/* ROUGH (IGNORE)
-CREATE OR REPLACE TABLE VJ_SALES_ROUGH_COPY AS
-SELECT *, TO_CHAR(TO_DATE(ORDER_DATE, 'YYYY-MM-DD'), 'DD-MM-YYYY') AS ORDER_DATE_NEW,
-          TO_CHAR(TO_DATE(SHIP_DATE, 'YYYY-MM-DD'), 'DD-MM-YYYY') AS SHIP_DATE_NEW 
-FROM VJ_SALES_DATA;
-DROP TABLE VJ_SALES_ROUGH_COPY;
-*/
-
 
 /* __________________________________ ANSWER 4__________________________________ */
 
@@ -177,24 +165,47 @@ SET PROCESS_DAY = (DATEDIFF(DAYS, ORDER_DATE_NEW, SHIP_DATE_NEW)); -- FROM Order
 SELECT ORDER_DATE_NEW, SHIP_DATE_NEW, PROCESS_DAY
 FROM VJ_SALES_COPY;
 
-
 /* __________________________________ ANSWER 7 __________________________________ */;
 
 /* 7. Create a new column called Rating and then based on the Process dates give rating like given below.
-        a. If process days less than or equal to 3days then rating should be 5
+        a. If process days less than or equal to 3 days then rating should be 5
         b. If process days are greater than 3 and less than or equal to 6 then rating should be 4
         c. If process days are greater than 6 and less than or equal to 10 then rating should be 3
         d. If process days are greater than 10 then the rating should be 2. */;
         
 
+ALTER TABLE VJ_SALES_COPY
+ADD COLUMN Rating INT;
 
 
+UPDATE VJ_SALES_COPY
+SET Rating = (CASE
+                  WHEN PROCESS_DAY <=3 THEN 5
+                  WHEN PROCESS_DAY > 3 AND PROCESS_DAY <= 6 THEN 4
+                  WHEN PROCESS_DAY > 6 AND PROCESS_DAY <= 10 THEN 3
+                  WHEN PROCESS_DAY > 10 THEN 2
+                  ELSE PROCESS_DAY
+              END);
 
 
+SELECT DISTINCT PROCESS_DAY, RATING
+FROM VJ_SALES_COPY
+ORDER BY PROCESS_DAY ASC;  -- Verification via Mapping.
+
+-- ALL_IN_ONE_FINAL_ANSWER;
+
+CREATE OR REPLACE VIEW ALL_IN_ONE_FINAL_ANSWER AS
+SELECT ORDER_ID, ORDER_EXTRACT, ORDER_DATE_NEW, SHIP_DATE_NEW, DISCOUNT, DISCOUNT_FLAG, PROCESS_DAY, RATING
+FROM VJ_SALES_COPY;
 
 
+SELECT *
+FROM ALL_IN_ONE_FINAL_ANSWER;
 
+DESCRIBE VIEW ALL_IN_ONE_FINAL_ANSWER;
 
+SELECT GET_DDL('VIEW', 'ALL_IN_ONE_FINAL_ANSWER');
 
+/*************************************** THANK YOU! ***************************************/;
 
 
