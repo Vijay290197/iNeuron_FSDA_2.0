@@ -1,3 +1,7 @@
+/* VIJAY KASOTIA
+EMAIL ID: vk73742@gmail.com */;
+
+
 USE WAREHOUSE INEURON_ASSIGNMENTS;
 USE DATABASE ASSIGNMENT_DB;
 
@@ -102,7 +106,7 @@ FROM information_schema.columns
 WHERE table_schema = 'PUBLIC' AND TABLE_NAME = 'VJ_SALES_COPY' AND (COLUMN_NAME = 'ORDER_DATE_NEW' OR COLUMN_NAME = 'SHIP_DATE_NEW');
 
 ALTER TABLE VJ_SALES_COPY
-DROP COLUMN ORDER_DATE, SHIP_DATE; -- We can drop both of these table beacuse we have replica of these two columns.
+DROP COLUMN ORDER_DATE, SHIP_DATE; -- We can drop both of these columns from the table beacuse we have replica of these two columns.
 
 DESCRIBE TABLE VJ_SALES_COPY;
 
@@ -207,5 +211,4 @@ DESCRIBE VIEW ALL_IN_ONE_FINAL_ANSWER;
 SELECT GET_DDL('VIEW', 'ALL_IN_ONE_FINAL_ANSWER');
 
 /*************************************** THANK YOU! ***************************************/;
-
 
