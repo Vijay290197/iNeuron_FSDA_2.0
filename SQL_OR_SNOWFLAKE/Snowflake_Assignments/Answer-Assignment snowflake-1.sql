@@ -120,7 +120,7 @@ DESCRIBE TABLE VJ_SALES_COPY;
 ALTER TABLE VJ_SALES_COPY
 ADD COLUMN ORDER_EXTRACT INT;
 
--- Extractin the last number using SPLIT_PART () or SUBSTR () function both work in same way.
+-- Extracting the last number using SPLIT_PART () or SUBSTR () function both work in same way.
 
 SELECT SPLIT_PART(ORDER_ID,'-',3) AS SPLIT_ID,
        SUBSTR(ORDER_ID, 9) AS SUBSTR_ID
